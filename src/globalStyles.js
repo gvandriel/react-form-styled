@@ -9,7 +9,6 @@ const GlobalStyle = createGlobalStyle`
 	 font-family: 'Montserrat', sans-serif;
  }
 
-
 `;
 
 export const Container = styled.div`
