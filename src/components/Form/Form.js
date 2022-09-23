@@ -11,37 +11,36 @@ import {
   FormButton,
   FormTitle,
 } from './FormStyles';
-
 import { Container } from '../../globalStyles';
-import { useHistory } from 'react-router-dom';
+import validateForm from './validateForm';
+import { useHistory } from 'react-router';
 
 const Form = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPass, setConfirmedPass] = useState('');
-
+  const [confirmPass, setConfirmPass] = useState('');
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   let history = useHistory();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const resultError = null;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const resultError = validateForm({ name, email, password, confirmPass });
+
     if (resultError !== null) {
       setError(resultError);
       return;
     }
-
     setName('');
     setEmail('');
     setPassword('');
-    setConfirmedPass('');
+    setConfirmPass('');
     setError(null);
-    setSuccess('Application was submitted Successfully');
+    setSuccess('Application was submitted!');
 
     setTimeout(() => {
-      history.pushState('/');
+      history.push('/21');
     });
   };
 
@@ -50,40 +49,77 @@ const Form = () => {
     animate: { y: 0, opacity: 1, transition: { delay: 0.2, duration: 0.4 } },
   };
 
-  const FormData = [
+  const formData = [
     {
       label: 'Name',
       value: name,
-      onchange: (e) => setName(e.target.value),
+      onChange: (e) => setName(e.target.value),
       type: 'text',
     },
     {
       label: 'Email',
       value: email,
-      onchange: (e) => setName(e.target.value),
+      onChange: (e) => setEmail(e.target.value),
       type: 'email',
     },
     {
       label: 'Password',
       value: password,
-      onchange: (e) => setName(e.target.value),
-      type: 'text',
+      onChange: (e) => setPassword(e.target.value),
+      type: 'password',
     },
     {
-      label: 'Name',
-      value: name,
-      onchange: (e) => setName(e.target.value),
-      type: 'text',
-    },
-    {
-      label: 'Name',
-      value: name,
-      onchange: (e) => setName(e.target.value),
-      type: 'text',
+      label: 'Confirm Password',
+      value: confirmPass,
+      onChange: (e) => setConfirmPass(e.target.value),
+      type: 'password',
     },
   ];
+  return (
+    <FormSection>
+      <Container>
+        <FormRow>
+          <FormColumn small>
+            <FormTitle>Sign up</FormTitle>
+            <FormWrapper onSubmit={handleSubmit}>
+              {formData.map((el, index) => (
+                <FormInputRow key={index}>
+                  <FormLabel>{el.label}</FormLabel>
+                  <FormInput
+                    type={el.type}
+                    placeholder={`Enter your ${el.label.toLocaleLowerCase()}`}
+                    value={el.value}
+                    onChange={el.onChange}
+                  />
+                </FormInputRow>
+              ))}
 
-  return <div>Form</div>;
+              <FormButton type='submit'>Signup</FormButton>
+            </FormWrapper>
+            {error && (
+              <FormMessage
+                variants={messageVariants}
+                initial='hidden'
+                animate='animate'
+                error
+              >
+                {error}
+              </FormMessage>
+            )}
+            {success && (
+              <FormMessage
+                variants={messageVariants}
+                initial='hidden'
+                animate='animate'
+              >
+                {success}
+              </FormMessage>
+            )}
+          </FormColumn>
+        </FormRow>
+      </Container>
+    </FormSection>
+  );
 };
 
 export default Form;

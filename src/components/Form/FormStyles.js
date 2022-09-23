@@ -31,6 +31,11 @@ export const FormColumn = styled.div`
   }
 `;
 
+export const FormWrapper = styled.form`
+  padding-top: 0;
+  width: 100;
+`;
+
 export const FormRow = styled.div`
   display: flex;
   justify-content: center;
